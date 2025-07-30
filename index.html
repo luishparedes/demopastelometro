@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PASTELOMETRO - DEMO</title>
+    <style>
+        :root {
+            --primary: #FF9AA2;
+            --secondary: #FFB7B2;
+            --light: #FFDAC1;
+            --accent: #E2F0CB;
+            --dark: #B5EAD7;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            margin-top: 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--secondary);
+        }
+
+        .btn-secondary {
+            background-color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-group button {
+            flex: 1;
+        }
+
+        .delete-sale-btn {
+            background-color: #ff6b6b;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .delete-sale-btn:hover {
+            background-color: #ff5252;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--light);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background-color: var(--light);
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+
+        .tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .receipt {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 20px auto;
+            font-family: monospace;
+        }
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 10px;
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .receipt-total {
+            font-weight: bold;
+            border-top: 1px dashed #333;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .receipt-note {
+            margin-top: 15px;
+            font-style: italic;
+            text-align: center;
+            color: #666;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Demo restrictions */
+        .demo-restriction {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .demo-restriction h4 {
+            margin-top: 0;
+            color: #856404;
+        }
+        
+        .upgrade-button {
+            background: linear-gradient(to right, #28a745, #218838);
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .upgrade-button:hover {
+            background: linear-gradient(to right, #218838, #1e7e34);
+        }
+
+        /* Limitación de productos */
+        .product-limit {
+            background-color: #f8d7da;
+            border-left: 5px solid #dc3545;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            color: #721c24;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="business-name">PASTELOMETRO - DEMO</h1>
+            <p>Calculadora inteligente para repostería</p>
+        </header>
+        
+        <div class="demo-restriction">
+            <h4>Versión DEMO Limitada</h4>
+            <p>Esta versión demo permite probar las funciones básicas. Para acceder a todas las características:</p>
+            <a href="#upgrade" class="upgrade-button">¡Actualiza a la versión completa!</a>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="ingredients">Ingredientes</div>
+            <div class="tab" data-tab="recipes">Recetas</div>
+            <div class="tab" data-tab="sales">Ventas</div>
+            <div class="tab" data-tab="settings">Configuración</div>
+        </div>
+        
+        <div id="ingredients" class="tab-content active">
+            <div class="card">
+                <h2>Agregar Nuevo Ingrediente</h2>
+                <div class="form-group">
+                    <label for="ingredient-name">Nombre del Ingrediente</label>
+                    <input type="text" id="ingredient-name" placeholder="Ej: Harina">
+                </div>
+                <div class="form-group">
+                    <label for="ingredient-price">Precio ($)</label>
+                    <input type="number" id="ingredient-price" step="0.01" placeholder="Ej: 1.80">
+                </div>
+                <div class="form-group">
+                    <label for="ingredient-quantity">Cantidad</label>
+                    <input type="number" id="ingredient-quantity" step="0.01" placeholder="Ej: 1000">
+                </div>
+                <div class="form-group">
+                    <label for="ingredient-unit">Unidad de Medida</label>
+                    <select id="ingredient-unit">
+                        <option value="g">Gramos (g)</option>
+                        <option value="kg">Kilogramos (kg)</option>
+                        <option value="ml">Mililitros (ml)</option>
+                        <option value="l">Litros (l)</option>
+                        <option value="unidades">Unidades</option>
+                    </select>
+                </div>
+                <button id="add-ingredient">Agregar Ingrediente</button>
+            </div>
+            
+            <div class="card">
+                <h2>Lista de Ingredientes</h2>
+                <table id="ingredients-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Precio por unidad</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ingredients-list">
+                        <!-- Aquí se cargarán los ingredientes -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="recipes" class="tab-content">
+            <div class="card">
+                <h2>Agregar Nueva Receta</h2>
+                <div class="form-group">
+                    <label for="recipe-name">Nombre de la Receta</label>
+                    <input type="text" id="recipe-name" placeholder="Ej: Pastel de Piña">
+                </div>
+                
+                <div id="recipe-ingredients">
+                    <h3>Ingredientes</h3>
+                    <div class="ingredient-row">
+                        <div class="grid">
+                            <div class="form-group">
+                                <label>Ingrediente</label>
+                                <select class="recipe-ingredient">
+                                    <option value="">Seleccionar</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Cantidad</label>
+                                <input type="number" class="recipe-quantity" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="add-more-ingredients">Agregar más ingredientes</button>
+                
+                <div class="form-group">
+                    <label for="recipe-portions">Porciones (unidades)</label>
+                    <input type="number" id="recipe-portions" value="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="recipe-profit">Porcentaje de ganancia (%)</label>
+                    <input type="number" id="recipe-profit" value="30">
+                </div>
+                
+                <div class="form-group">
+                    <label for="recipe-depreciation">Depreciación de maquinaria (%)</label>
+                    <input type="number" id="recipe-depreciation" value="5">
+                </div>
+                
+                <div class="form-group">
+                    <label for="recipe-labor">Mano de obra (%)</label>
+                    <input type="number" id="recipe-labor" value="12">
+                </div>
+                
+                <div class="form-group">
+                    <label for="recipe-additional">Costos adicionales ($) (empaque, delivery, etc.)</label>
+                    <input type="number" id="recipe-additional" step="0.01" value="0">
+                </div>
+                
+                <button id="save-recipe">Guardar Receta</button>
+            </div>
+            
+            <div class="card">
+                <h2>Mis Recetas</h2>
+                <table id="recipes-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Costo Total</th>
+                            <th>Precio de Venta</th>
+                            <th>Porciones</th>
+                            <th>Precio por Porción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recipes-list">
+                        <!-- Aquí se cargarán las recetas -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="sales" class="tab-content">
+            <div class="card">
+                <h2>Generar Venta</h2>
+                <div class="form-group">
+                    <label for="sale-recipe">Seleccionar Receta</label>
+                    <select id="sale-recipe">
+                        <option value="">Seleccionar receta</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sale-type">Tipo de Venta</label>
+                    <select id="sale-type">
+                        <option value="whole">Pastel completo</option>
+                        <option value="portion">Por porción</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="portion-quantity-container">
+                    <label for="portion-quantity">Cantidad de porciones</label>
+                    <input type="number" id="portion-quantity" value="1" min="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="exchange-rate">Tasa de cambio ($ a Bs)</label>
+                    <input type="number" id="exchange-rate" step="0.01" value="77.00">
+                </div>
+                
+                <div class="button-group">
+                    <button id="generate-presupuesto" class="btn-secondary">Presupuesto</button>
+                    <button id="generate-sale">Generar Venta</button>
+                </div>
+                
+                <div id="receipt-container" class="hidden">
+                    <div class="receipt" id="receipt">
+                        <div class="receipt-header">
+                            <h2 id="receipt-business-name">PASTELOMETRO</h2>
+                            <p id="receipt-type">Recibo de Venta</p>
+                        </div>
+                        <div id="receipt-content">
+                            <!-- Contenido del recibo -->
+                        </div>
+                    </div>
+                    <button id="copy-receipt">Copiar Recibo</button>
+                    <button id="share-receipt">Compartir</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Reporte de Ventas</h2>
+                <table id="sales-report">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Receta</th>
+                            <th>Tipo</th>
+                            <th>Cantidad</th>
+                            <th>Total ($)</th>
+                            <th>Total (Bs)</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales-list">
+                        <!-- Aquí se cargarán las ventas -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="settings" class="tab-content">
+            <div class="card">
+                <h2>Configuración del Negocio</h2>
+                <div class="form-group">
+                    <label for="business-name-input">Nombre de tu Emprendimiento</label>
+                    <input type="text" id="business-name-input" placeholder="Ej: Dulces Tentaciones">
+                </div>
+                <button id="save-business-name">Guardar Nombre</button>
+            </div>
+            
+            <div class="card">
+                <h2>Exportar/Importar Datos</h2>
+                <p>Respaldar toda la información de la aplicación</p>
+                <button id="export-data" disabled>Exportar Datos (Solo versión completa)</button>
+                <div class="form-group">
+                    <label for="import-data">Importar Datos</label>
+                    <input type="file" id="import-data" accept=".json" disabled>
+                </div>
+                <button id="import-data-btn" disabled>Importar (Solo versión completa)</button>
+            </div>
+            
+            <div class="card">
+                <h2>Restablecer Datos</h2>
+                <p>Eliminar toda la información almacenada</p>
+                <button id="reset-data" class="btn-secondary">Restablecer Todo</button>
+            </div>
+        </div>
+        
+        <!-- Sección de actualización -->
+        <div id="upgrade" class="card" style="margin-top: 30px; text-align: center;">
+            <h2>¿Quieres la versión completa del Pastelómetro?</h2>
+            <p>La versión completa incluye:</p>
+            <ul style="text-align: left; margin-left: 20px;">
+                <li>Ingredientes y recetas ilimitadas</li>
+                <li>Exportación e importación de datos</li>
+                <li>Generación de reportes detallados</li>
+                <li>Historial completo de ventas</li>
+                <li>Edición avanzada de recetas</li>
+                <li>Soporte técnico prioritario</li>
+                <li>Actualizaciones gratuitas</li>
+            </ul>
+            <p style="font-weight: bold; font-size: 1.2rem; margin-top: 20px;">Precio especial: $XX.XX</p>
+            <button onclick="window.open('https://forms.gle/6r4N6V6giwsxmvJ37', '_blank')" style="background: linear-gradient(to right, #ff5722, #f4511e); padding: 15px 30px; font-size: 1.2rem;">
+                ¡Comprar ahora!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Variables globales
+            let ingredients = JSON.parse(localStorage.getItem('ingredients')) || [];
+            let recipes = JSON.parse(localStorage.getItem('recipes')) || [];
+            let sales = JSON.parse(localStorage.getItem('sales')) || [];
+            let businessName = localStorage.getItem('businessName') || 'PASTELOMETRO - DEMO';
+            
+            // Límites de la versión demo
+            const MAX_INGREDIENTS_DEMO = 5;
+            const MAX_RECIPES_DEMO = 3;
+            const MAX_SALES_DEMO = 5;
+            
+            // Elementos del DOM
+            const businessNameElement = document.getElementById('business-name');
+            const businessNameInput = document.getElementById('business-name-input');
+            const saveBusinessNameBtn = document.getElementById('save-business-name');
+            
+            // Inicializar la aplicación
+            init();
+            
+            // Funciones de inicialización
+            function init() {
+                updateBusinessName();
+                loadIngredients();
+                loadRecipes();
+                loadSales();
+                setupEventListeners();
+                updateIngredientDropdowns();
+                
+                // Ocultar contenedor de recibo al inicio
+                document.getElementById('receipt-container').classList.add('hidden');
+                
+                // Configurar tipo de venta
+                document.getElementById('portion-quantity-container').style.display = 'none';
+            }
+            
+            function updateBusinessName() {
+                businessNameElement.textContent = businessName;
+                businessNameInput.value = businessName;
+            }
+            
+            function setupEventListeners() {
+                // Tabs
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                        
+                        this.classList.add('active');
+                        document.getElementById(this.dataset.tab).classList.add('active');
+                    });
+                });
+                
+                // Ingredientes
+                document.getElementById('add-ingredient').addEventListener('click', addIngredient);
+                
+                // Recetas
+                document.getElementById('add-more-ingredients').addEventListener('click', addMoreIngredients);
+                document.getElementById('save-recipe').addEventListener('click', saveRecipe);
+                
+                // Ventas
+                document.getElementById('generate-sale').addEventListener('click', () => generateSale(false));
+                document.getElementById('generate-presupuesto').addEventListener('click', () => generateSale(true));
+                document.getElementById('copy-receipt').addEventListener('click', copyReceipt);
+                document.getElementById('share-receipt').addEventListener('click', shareReceipt);
+                
+                // Configuración
+                saveBusinessNameBtn.addEventListener('click', saveBusinessName);
+                document.getElementById('reset-data').addEventListener('click', resetData);
+                
+                // Tipo de venta
+                document.getElementById('sale-type').addEventListener('change', function() {
+                    document.getElementById('portion-quantity-container').style.display = 
+                        this.value === 'portion' ? 'block' : 'none';
+                });
+            }
+            
+            // Funciones de ingredientes
+            function addIngredient() {
+                // Verificar límite de ingredientes en demo
+                if (ingredients.length >= MAX_INGREDIENTS_DEMO) {
+                    alert(`Versión DEMO limitada a ${MAX_INGREDIENTS_DEMO} ingredientes. Actualiza a la versión completa.`);
+                    document.getElementById('upgrade').scrollIntoView({ behavior: 'smooth' });
+                    return;
+                }
+                
+                const name = document.getElementById('ingredient-name').value.trim();
+                const price = parseFloat(document.getElementById('ingredient-price').value);
+                const quantity = parseFloat(document.getElementById('ingredient-quantity').value);
+                const unit = document.getElementById('ingredient-unit').value;
+                
+                if (!name || isNaN(price) || isNaN(quantity)) {
+                    alert('Por favor complete todos los campos correctamente');
+                    return;
+                }
+                
+                // Calcular precio por unidad (gramo, ml, unidad, etc.)
+                const unitPrice = price / quantity;
+                
+                const ingredient = {
+                    id: Date.now(),
+                    name,
+                    price,
+                    quantity,
+                    unit,
+                    unitPrice
+                };
+                
+                ingredients.push(ingredient);
+                saveIngredients();
+                
+                // Limpiar formulario
+                document.getElementById('ingredient-name').value = '';
+                document.getElementById('ingredient-price').value = '';
+                document.getElementById('ingredient-quantity').value = '';
+                
+                loadIngredients();
+                updateIngredientDropdowns();
+            }
+            
+            function loadIngredients() {
+                const tbody = document.getElementById('ingredients-list');
+                tbody.innerHTML = '';
+                
+                if (ingredients.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5">No hay ingredientes registrados</td></tr>';
+                    return;
+                }
+                
+                ingredients.forEach(ingredient => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${ingredient.name}</td>
+                        <td>$${ingredient.price.toFixed(2)}</td>
+                        <td>${ingredient.quantity} ${ingredient.unit}</td>
+                        <td>$${ingredient.unitPrice.toFixed(6)}/${ingredient.unit}</td>
+                        <td>
+                            <button onclick="editIngredient(${ingredient.id})">Editar</button>
+                            <button onclick="deleteIngredient(${ingredient.id})">Eliminar</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            
+            function updateIngredientDropdowns() {
+                const dropdowns = document.querySelectorAll('.recipe-ingredient, #sale-recipe');
+                
+                dropdowns.forEach(dropdown => {
+                    const currentValue = dropdown.value;
+                    dropdown.innerHTML = dropdown.id === 'sale-recipe' 
+                        ? '<option value="">Seleccionar receta</option>'
+                        : '<option value="">Seleccionar</option>';
+                    
+                    if (dropdown.id === 'sale-recipe') {
+                        recipes.forEach(recipe => {
+                            const option = document.createElement('option');
+                            option.value = recipe.id;
+                            option.textContent = recipe.name;
+                            dropdown.appendChild(option);
+                        });
+                    } else {
+                        ingredients.forEach(ingredient => {
+                            const option = document.createElement('option');
+                            option.value = ingredient.id;
+                            option.textContent = `${ingredient.name} ($${ingredient.unitPrice.toFixed(6)}/${ingredient.unit})`;
+                            dropdown.appendChild(option);
+                        });
+                    }
+                    
+                    // Restaurar el valor seleccionado si existe
+                    if (currentValue && Array.from(dropdown.options).some(opt => opt.value === currentValue)) {
+                        dropdown.value = currentValue;
+                    }
+                });
+            }
+            
+            function saveIngredients() {
+                localStorage.setItem('ingredients', JSON.stringify(ingredients));
+            }
+            
+            // Funciones de recetas
+            function addMoreIngredients() {
+                const container = document.getElementById('recipe-ingredients');
+                const newRow = document.createElement('div');
+                newRow.className = 'ingredient-row';
+                newRow.innerHTML = `
+                    <div class="grid">
+                        <div class="form-group">
+                            <label>Ingrediente</label>
+                            <select class="recipe-ingredient">
+                                <option value="">Seleccionar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Cantidad</label>
+                            <input type="number" class="recipe-quantity" step="0.01">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(newRow);
+                updateIngredientDropdowns();
+            }
+            
+            function saveRecipe() {
+                // Verificar límite de recetas en demo
+                if (recipes.length >= MAX_RECIPES_DEMO) {
+                    alert(`Versión DEMO limitada a ${MAX_RECIPES_DEMO} recetas. Actualiza a la versión completa.`);
+                    document.getElementById('upgrade').scrollIntoView({ behavior: 'smooth' });
+                    return;
+                }
+                
+                const name = document.getElementById('recipe-name').value.trim();
+                const portions = parseInt(document.getElementById('recipe-portions').value);
+                const profit = parseFloat(document.getElementById('recipe-profit').value);
+                const depreciation = parseFloat(document.getElementById('recipe-depreciation').value);
+                const labor = parseFloat(document.getElementById('recipe-labor').value);
+                const additional = parseFloat(document.getElementById('recipe-additional').value) || 0;
+                
+                if (!name || isNaN(portions) || isNaN(profit) || isNaN(depreciation) || isNaN(labor)) {
+                    alert('Por favor complete todos los campos correctamente');
+                    return;
+                }
+                
+                // Obtener ingredientes de la receta
+                const ingredientRows = document.querySelectorAll('.ingredient-row');
+                const recipeIngredients = [];
+                let totalCost = 0;
+                
+                ingredientRows.forEach(row => {
+                    const ingredientId = parseInt(row.querySelector('.recipe-ingredient').value);
+                    const quantity = parseFloat(row.querySelector('.recipe-quantity').value);
+                    
+                    if (ingredientId && !isNaN(quantity)) {
+                        const ingredient = ingredients.find(i => i.id === ingredientId);
+                        if (ingredient) {
+                            // Calcular costo: precio por unidad * cantidad usada
+                            const cost = quantity * ingredient.unitPrice;
+                            totalCost += cost;
+                            
+                            recipeIngredients.push({
+                                ingredientId,
+                                name: ingredient.name,
+                                quantity,
+                                unit: ingredient.unit,
+                                cost
+                            });
+                        }
+                    }
+                });
+                
+                if (recipeIngredients.length === 0) {
+                    alert('Debe agregar al menos un ingrediente a la receta');
+                    return;
+                }
+                
+                // Calcular costos adicionales (porcentajes)
+                const depreciationCost = totalCost * (depreciation / 100);
+                const laborCost = totalCost * (labor / 100);
+                
+                // Costo total con adicionales
+                const totalWithAdditional = totalCost + depreciationCost + laborCost + additional;
+                
+                // Calcular precio de venta: costo / (1 - %ganancia/100)
+                const salePrice = totalWithAdditional / (1 - (profit / 100));
+                
+                // Precio por porción
+                const portionPrice = salePrice / portions;
+                
+                const recipe = {
+                    id: Date.now(),
+                    name,
+                    portions,
+                    profit,
+                    depreciation,
+                    labor,
+                    additional,
+                    ingredients: recipeIngredients,
+                    totalCost,
+                    depreciationCost,
+                    laborCost,
+                    totalWithAdditional,
+                    salePrice,
+                    portionPrice,
+                    createdAt: new Date().toISOString()
+                };
+                
+                recipes.push(recipe);
+                saveRecipes();
+                
+                // Limpiar formulario
+                document.getElementById('recipe-name').value = '';
+                document.getElementById('recipe-portions').value = '1';
+                document.getElementById('recipe-profit').value = '30';
+                document.getElementById('recipe-depreciation').value = '5';
+                document.getElementById('recipe-labor').value = '12';
+                document.getElementById('recipe-additional').value = '0';
+                
+                const ingredientsContainer = document.getElementById('recipe-ingredients');
+                ingredientsContainer.innerHTML = `
+                    <h3>Ingredientes</h3>
+                    <div class="ingredient-row">
+                        <div class="grid">
+                            <div class="form-group">
+                                <label>Ingrediente</label>
+                                <select class="recipe-ingredient">
+                                    <option value="">Seleccionar</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Cantidad</label>
+                                <input type="number" class="recipe-quantity" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                loadRecipes();
+                updateIngredientDropdowns();
+            }
+            
+            function loadRecipes() {
+                const tbody = document.getElementById('recipes-list');
+                tbody.innerHTML = '';
+                
+                if (recipes.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6">No hay recetas registradas</td></tr>';
+                    return;
+                }
+                
+                recipes.forEach(recipe => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${recipe.name}</td>
+                        <td>$${recipe.totalWithAdditional.toFixed(2)}</td>
+                        <td>$${recipe.salePrice.toFixed(2)}</td>
+                        <td>${recipe.portions}</td>
+                        <td>$${recipe.portionPrice.toFixed(2)}</td>
+                        <td>
+                            <button onclick="viewRecipeDetails(${recipe.id})">Ver</button>
+                            <button onclick="deleteRecipe(${recipe.id})">Eliminar</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            
+            function saveRecipes() {
+                localStorage.setItem('recipes', JSON.stringify(recipes));
+            }
+            
+            // Funciones de ventas
+            function generateSale(isPresupuesto = false) {
+                // Verificar límite de ventas en demo
+                if (!isPresupuesto && sales.length >= MAX_SALES_DEMO) {
+                    alert(`Versión DEMO limitada a ${MAX_SALES_DEMO} ventas registradas. Actualiza a la versión completa.`);
+                    document.getElementById('upgrade').scrollIntoView({ behavior: 'smooth' });
+                    return;
+                }
+                
+                const recipeId = parseInt(document.getElementById('sale-recipe').value);
+                const saleType = document.getElementById('sale-type').value;
+                const portionQuantity = parseInt(document.getElementById('portion-quantity').value) || 1;
+                const exchangeRate = parseFloat(document.getElementById('exchange-rate').value) || 77.00;
+                
+                if (!recipeId) {
+                    alert('Por favor seleccione una receta');
+                    return;
+                }
+                
+                const recipe = recipes.find(r => r.id === recipeId);
+                if (!recipe) return;
+                
+                let total, quantityText;
+                
+                if (saleType === 'portion') {
+                    total = recipe.portionPrice * portionQuantity;
+                    quantityText = `${portionQuantity} porción(es)`;
+                } else {
+                    total = recipe.salePrice;
+                    quantityText = '1 pastel completo';
+                }
+                
+                const totalBs = total * exchangeRate;
+                
+                if (!isPresupuesto) {
+                    const sale = {
+                        id: Date.now(),
+                        recipeId,
+                        recipeName: recipe.name,
+                        saleType,
+                        quantity: saleType === 'portion' ? portionQuantity : 1,
+                        total,
+                        totalBs,
+                        exchangeRate,
+                        date: new Date().toISOString()
+                    };
+                    
+                    sales.push(sale);
+                    saveSales();
+                    loadSales();
+                }
+                
+                // Generar recibo
+                generateReceipt({
+                    recipeName: recipe.name,
+                    saleType,
+                    quantity: saleType === 'portion' ? portionQuantity : 1,
+                    total,
+                    totalBs,
+                    exchangeRate
+                }, recipe, isPresupuesto);
+                
+                // Mostrar recibo
+                document.getElementById('receipt-container').classList.remove('hidden');
+            }
+            
+            function generateReceipt(sale, recipe, isPresupuesto = false) {
+                const receiptBusinessName = document.getElementById('receipt-business-name');
+                const receiptType = document.getElementById('receipt-type');
+                const receiptContent = document.getElementById('receipt-content');
+                
+                receiptBusinessName.textContent = businessName;
+                receiptType.textContent = isPresupuesto ? 'Presupuesto' : 'Recibo de Venta';
+                
+                let html = `
+                    <div class="receipt-item">
+                        <span>Receta:</span>
+                        <span>${recipe.name}</span>
+                    </div>
+                    <div class="receipt-item">
+                        <span>Tipo:</span>
+                        <span>${sale.saleType === 'portion' ? 'Por porción' : 'Pastel completo'}</span>
+                    </div>
+                    <div class="receipt-item">
+                        <span>Cantidad:</span>
+                        <span>${sale.saleType === 'portion' ? sale.quantity + ' porción(es)' : '1 unidad'}</span>
+                    </div>
+                    <div class="receipt-item">
+                        <span>Fecha:</span>
+                        <span>${new Date().toLocaleString()}</span>
+                    </div>
+                    <div class="receipt-item receipt-total">
+                        <span>Total ($):</span>
+                        <span>$${sale.total.toFixed(2)}</span>
+                    </div>
+                    <div class="receipt-item">
+                        <span>Total (Bs):</span>
+                        <span>${sale.totalBs.toFixed(2)} Bs</span>
+                    </div>
+                    <div class="receipt-item">
+                        <span>Tasa de cambio:</span>
+                        <span>1$ = ${sale.exchangeRate.toFixed(2)} Bs</span>
+                    </div>
+                `;
+                
+                if (isPresupuesto) {
+                    html += `
+                        <div class="receipt-note">
+                            <p><em>Este es un presupuesto, no una venta registrada.</em></p>
+                        </div>
+                    `;
+                }
+                
+                receiptContent.innerHTML = html;
+            }
+            
+            function copyReceipt() {
+                const receipt = document.getElementById('receipt');
+                const range = document.createRange();
+                range.selectNode(receipt);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                document.execCommand('copy');
+                window.getSelection().removeAllRanges();
+                alert('Recibo copiado al portapapeles');
+            }
+            
+            function shareReceipt() {
+                const receipt = document.getElementById('receipt');
+                const receiptText = `📄 Recibo de ${businessName}\n\n` + 
+                                   `Receta: ${receipt.querySelector('.receipt-item:nth-child(1) span:last-child').textContent}\n` +
+                                   `Tipo: ${receipt.querySelector('.receipt-item:nth-child(2) span:last-child').textContent}\n` +
+                                   `Cantidad: ${receipt.querySelector('.receipt-item:nth-child(3) span:last-child').textContent}\n` +
+                                   `Fecha: ${receipt.querySelector('.receipt-item:nth-child(4) span:last-child').textContent}\n` +
+                                   `Total ($): ${receipt.querySelector('.receipt-total span:last-child').textContent}\n` +
+                                   `Total (Bs): ${receipt.querySelector('.receipt-item:nth-child(6) span:last-child').textContent}\n` +
+                                   `Tasa de cambio: ${receipt.querySelector('.receipt-item:nth
